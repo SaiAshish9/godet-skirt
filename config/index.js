@@ -55,10 +55,8 @@ export default {
     numOfPanels: { count: 8, min: 4, max: 14 },
     naturalWaistToHip: { mm: 203.2, min: 127, max: 279.4 },
     hemExcess: { mm: 0, min: -76.2, max: 203.2 },
-    numOfGodets: { count: 6, min: 2, max: 10 },
+    numOfGodets: { count: 8, min: 4, max: 12 },
     godetWidth: { mm: 101.6, min: 50.8, max: 152.4 },
-    godetLength: { mm: 254, min: 177.8, max: 330.2 },
-    frontGodetGap: { mm: 25.4, min: 12.7, max: 50.8 },
-    backGodetGap: { mm: 38.1, min: 12.7, max: 50.8 }
+    godetLength: { mm: 254, min: 177.8, max: 330.2 }
   }
 };

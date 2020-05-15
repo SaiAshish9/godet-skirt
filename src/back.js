@@ -1,6 +1,10 @@
 export default function(part) {
     let { Point, points, Path, paths, measurements, options } = part.shorthand();
     const inch = 25.4;
+    // Godets other than 4 fixed ones
+    const varGodets = options.numOfGodets / 4;
+    const godetWidth = ((measurements.backHipArc + options.manipulateHem) * 0.8) / varGodets;
+    const godetGap = ((measurements.backHipArc + options.manipulateHem) * 0.2) / varGodets;
   
     // Design pattern here
     points.origin = new Point(0, 0);
@@ -36,7 +40,6 @@ export default function(part) {
     points.leftDartPoint = points.leftDartC
       .shift(-91, options.backLeftDartLength);
     
-  
     paths.seam = new Path()
       .move(points.origin)
       .line(points.rHem)
@@ -54,30 +57,45 @@ export default function(part) {
       .line(points.rightDartPoint)
       .line(points.rightDartR)
 
-    // Godets
-    points.godet = points.rHem.shift(90, options.godetLength);
-    for (let i = 1; 1 ; i++) {
-        let distance = Math.floor((i-1) * (options.godetWidth + options.backGodetGap));
-        if(distance > Math.abs(points.lHem.x)) break;
-        points[`godet${i}Top`] = points.godet.shift(180, distance);
-        if(points[`godet${i}Top`].x <= 0 && points[`godet${i}Top`].x > points.lHem.x) {
-            points[`godet${i}Left`] = points[`godet${i}Top`].translate(-options.godetWidth / 2, options.godetLength);
-            points[`godet${i}LeftTop`] = points[`godet${i}Left`].shift(90, 0.8 * options.godetLength);
-            points[`godet${i}TopLcp`] = points[`godet${i}Left`].shift(90, options.godetLength);
-            paths[`godet${i}Left`] = new Path()
-                .move(points[`godet${i}Top`])
-                ._curve(points[`godet${i}TopLcp`], points[`godet${i}LeftTop`])
-                .line(points[`godet${i}Left`]);
-        }
-        if(points[`godet${i}Top`].x >= points.lHem.x && points[`godet${i}Top`].x < 0) {
-            points[`godet${i}Right`] = points[`godet${i}Top`].translate(options.godetWidth / 2, options.godetLength);
-            points[`godet${i}RightTop`] = points[`godet${i}Right`].shift(90, 0.8 * options.godetLength);
-            points[`godet${i}TopRcp`] = points[`godet${i}Right`].shift(90, options.godetLength);
-            paths[`godet${i}Right`] = new Path()
-                .move(points[`godet${i}Top`])
-                ._curve(points[`godet${i}TopRcp`], points[`godet${i}RightTop`])
-                .line(points[`godet${i}Right`]);
-        }
+    // Right Fixed Half Godet
+    points.rFGodetTop = points.rHem.shift(90, options.godetLength);
+    points.rFGodetLeft = points.rFGodetTop.translate(-godetWidth / 2, options.godetLength);
+    points.rFGodetLeftTop = points.rFGodetLeft.shift(90, 0.8 * options.godetLength);
+    points.rFGodetTopLcp = points.rFGodetLeft.shift(90, options.godetLength);
+    paths.rFGodet = new Path()
+      .move(points.rFGodetTop)
+      ._curve(points.rFGodetTopLcp, points.rFGodetLeftTop)
+      .line(points.rFGodetLeft);
+
+    // Left Fixed Half Godet
+    points.lFGodetTop = points.lHem.shift(90, options.godetLength);
+    points.lFGodetRight = points.lFGodetTop.translate(godetWidth / 2, options.godetLength);
+    points.lFGodetRightTop = points.lFGodetRight.shift(90, 0.8 * options.godetLength);
+    points.lFGodetTopRcp = points.lFGodetRight.shift(90, options.godetLength);
+    paths.lFGodet = new Path()
+      .move(points.lFGodetTop)
+      ._curve(points.lFGodetTopRcp, points.lFGodetRightTop)
+      .line(points.lFGodetRight);
+
+    // Variable Godets
+    for(let i=1; i<varGodets; i++) {
+      points[`godet${i}Top`] = points.rFGodetTop.shift(180, i * (godetWidth + godetGap));
+      // Left half path
+      points[`godet${i}Left`] = points[`godet${i}Top`].translate(-godetWidth / 2, options.godetLength);
+      points[`godet${i}LeftTop`] = points[`godet${i}Left`].shift(90, 0.8 * options.godetLength);
+      points[`godet${i}TopLcp`] = points[`godet${i}Left`].shift(90, options.godetLength);
+      paths[`godet${i}L`] = new Path()
+        .move(points[`godet${i}Top`])
+        ._curve(points[`godet${i}TopLcp`], points[`godet${i}LeftTop`])
+        .line(points[`godet${i}Left`]);
+      // Right half path
+      points[`godet${i}Right`] = points[`godet${i}Top`].translate(godetWidth / 2, options.godetLength);
+      points[`godet${i}RightTop`] = points[`godet${i}Right`].shift(90, 0.8 * options.godetLength);
+      points[`godet${i}TopRcp`] = points[`godet${i}Right`].shift(90, options.godetLength);
+      paths[`godet${i}R`] = new Path()
+        .move(points[`godet${i}Top`])
+        ._curve(points[`godet${i}TopRcp`], points[`godet${i}RightTop`])
+        .line(points[`godet${i}Right`]);
     }
   
   // Complete?
