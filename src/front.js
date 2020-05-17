@@ -2,9 +2,14 @@ export default function(part) {
     let { Point, points, Path, paths, measurements, options } = part.shorthand();
     const inch = 25.4;
     // Godets other than 4 fixed ones
-    const varGodets = options.numOfGodets / 4;
-    const godetWidth = ((measurements.frontHipArc + options.manipulateHem) * 0.8) / varGodets;
-    const godetGap = ((measurements.frontHipArc + options.manipulateHem) * 0.2) / varGodets;
+    let varGodets = parseInt(options.numOfGodets) / 4;
+    let godetWidth = options.godetWidth;
+    let godetGap = ((measurements.frontHipArc + options.manipulateHem) - (godetWidth * varGodets)) / varGodets;
+
+    if(godetWidth * varGodets > (measurements.frontHipArc + options.manipulateHem)) {
+      godetWidth = (measurements.frontHipArc + options.manipulateHem) / varGodets;
+      godetGap = 0;
+    }
   
     // Design pattern here
     points.origin = new Point(0, 0);
