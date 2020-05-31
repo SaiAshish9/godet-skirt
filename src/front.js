@@ -6,9 +6,9 @@ export default function(part) {
     let godetWidth = options.godetWidth;
     let godetGap = ((measurements.frontHipArc + options.manipulateHem) - (godetWidth * varGodets)) / varGodets;
 
-    if(godetWidth * varGodets > (measurements.frontHipArc + options.manipulateHem)) {
-      godetWidth = (measurements.frontHipArc + options.manipulateHem) / varGodets;
-      godetGap = 0;
+    if(godetWidth * varGodets >= (measurements.frontHipArc + options.manipulateHem)) {
+      godetWidth = (0.8 * (measurements.frontHipArc + options.manipulateHem)) / varGodets;
+      godetGap = (0.2 * (measurements.frontHipArc + options.manipulateHem)) / varGodets;
     }
   
     // Design pattern here
