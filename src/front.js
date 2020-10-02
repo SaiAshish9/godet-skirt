@@ -12,16 +12,7 @@ export default function(part) {
     }
   
     // Design pattern here
-    points.origin = new Point(0, 0);
-    points.rHem = points.origin.translate(measurements.frontHipArc + options.manipulateHem , measurements.length);
-    points.lHem = points.origin.shift(-90, measurements.length);
-    points.rHip = points.origin.translate(measurements.frontHipArc, options.naturalWaistToHip);
-    points.rWaist = points.origin.translate(measurements.frontWaistArc / 2 + options.frontDartWidth*2 , -(1/2) * inch);
-    points.waistCp = points.rWaist.shift(195, points.origin.dx(points.rWaist) / 3);
-    points.cp1 = points.rHip.shift(90, -points.rHip.dy(points.origin) / 2);
-    points.cp2 = points.rHip.shift(-90, points.rHip.dy(points.rHem) / 2.5);
-    points.topRight = points.origin.shift(0, measurements.frontHipArc);
-    points.bottomRight = points.topRight.shift(-90, measurements.length);
+
   
     paths.waistCurve = new Path()
       .move(points.origin)
